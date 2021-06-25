@@ -1,7 +1,12 @@
-import '../styles/globals.css'
-import type { AppProps } from 'next/app'
+import { JWTTokenProvider } from "../api/auth"
+import type { AppProps } from "next/app"
+import "../styles/globals.css"
 
 function MyApp({ Component, pageProps }: AppProps) {
-  return <Component {...pageProps} />
+  return (
+    <JWTTokenProvider>
+      <Component {...pageProps} />
+    </JWTTokenProvider>
+  )
 }
 export default MyApp
