@@ -1,14 +1,14 @@
 import { useRouter } from "next/router"
-import { useDoctorInfo } from "../../api"
+import { usePatientInfo } from "../../api"
 
 import { useUserSignedIn } from "../../api/auth"
 import Layout from "../../components/layout"
 
-export default function DoctorDetails() {
+export default function PatientDetails() {
   const router = useRouter()
   const isSignedIn = useUserSignedIn()
   const { id } = router.query
-  const [doctor, isLoading] = useDoctorInfo(id)
+  const [patient, isLoading] = usePatientInfo(id)
 
   if (typeof window !== "undefined" && !isSignedIn) {
     router.push("/signin")
@@ -19,39 +19,38 @@ export default function DoctorDetails() {
     <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
   ) : (
     <h2 className="text-lg leading-6 font-medium text-gray-900">
-      {doctor!.name}
-      {doctor!.position}
+      {patient!.name}
     </h2>
   )
   const workerID = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-2/6"></div>
   ) : (
-    doctor!.workerId
+    patient!.nationalId
   )
   const nationalID = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
   ) : (
-    doctor!.nationalId
+    patient!.nationalId
   )
   const contactNo = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
   ) : (
-    doctor!.contactNo
+    patient!.contactNo ?? "-"
   )
   const email = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
   ) : (
-    doctor!.email
+    patient!.email ?? "-"
   )
   const gender = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-1/6"></div>
   ) : (
-    doctor!.gender
+    patient!.gender
   )
   const dateOfBirth = isLoading ? (
     <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
   ) : (
-    doctor?.dateOfBirth
+    patient?.dateOfBirth
   )
 
   return (
