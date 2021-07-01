@@ -1,12 +1,14 @@
-import { useState, useCallback } from "react"
 import { LockClosedIcon } from "@heroicons/react/solid"
+import { useRouter } from "next/router"
+import { useState, useCallback } from "react"
 
-import { useAuthJwt } from "../api/auth"
+import { useAuthJwt, signin } from "../api/auth"
 
-export default function About() {
+export default function Signin() {
+  const router = useRouter()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [_, setToken] = useAuthJwt()
+  const [jwtToken, setJwtToken] = useAuthJwt()
 
   const onUsernameChange = useCallback(
     (e) => setUsername(e.target.value),
@@ -16,10 +18,25 @@ export default function About() {
     (e) => setPassword(e.target.value),
     [setPassword]
   )
-  const onSignin = useCallback(async (e) => {
-    e.preventDefault()
-    console.log("login")
-  }, [])
+  const onSignin = useCallback(
+    async (e) => {
+      e.preventDefault()
+
+      try {
+        setJwtToken(await signin(username, password))
+        router.push("/")
+      } catch (e) {
+        console.error(e)
+      }
+    },
+    [username, password]
+  )
+
+  // redirect users to dashboard if they are already signed in
+  if (typeof window !== "undefined" && jwtToken !== null) {
+    router.push("/")
+    return null
+  }
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">

@@ -2,9 +2,8 @@ import { useRouter } from "next/router"
 
 import { useUserSignedIn } from "../api/auth"
 import Layout from "../components/layout"
-import Timestamp from "../components/timestamp"
 
-export default function Dashboard() {
+export default function Patients() {
   const router = useRouter()
   const isSignedIn = useUserSignedIn()
 
@@ -16,9 +15,8 @@ export default function Dashboard() {
   return (
     <Layout>
       <header className="bg-white shadow">
-        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">Dashboard</h1>
-          <Timestamp />
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8">
+          <h1 className="text-3xl font-bold text-gray-900">病房</h1>
         </div>
       </header>
       <main>
