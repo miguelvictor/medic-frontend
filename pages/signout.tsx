@@ -1,13 +1,14 @@
 import { useRouter } from "next/router"
 
-import { useAuthJwt } from "../api/auth"
+import { useAuthUpdater, useUserSignedIn } from "../api/auth"
 
 export default function Signout() {
   const router = useRouter()
-  const [jwtToken, setJwtToken] = useAuthJwt()
+  const updateAuth = useAuthUpdater()
+  const isSignedIn = useUserSignedIn()
 
-  if (jwtToken !== null) {
-    setJwtToken(null)
+  if (isSignedIn) {
+    updateAuth(null, null)
   }
 
   router.push("/signin")

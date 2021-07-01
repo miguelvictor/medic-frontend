@@ -2,13 +2,14 @@ import { LockClosedIcon } from "@heroicons/react/solid"
 import { useRouter } from "next/router"
 import { useState, useCallback } from "react"
 
-import { useAuthJwt, signin } from "../api/auth"
+import { useAuthUpdater, useUserSignedIn, signin } from "../api/auth"
 
 export default function Signin() {
   const router = useRouter()
+  const isSignedIn = useUserSignedIn()
+  const updateAuth = useAuthUpdater()
   const [username, setUsername] = useState("")
   const [password, setPassword] = useState("")
-  const [jwtToken, setJwtToken] = useAuthJwt()
 
   const onUsernameChange = useCallback(
     (e) => setUsername(e.target.value),
@@ -23,7 +24,8 @@ export default function Signin() {
       e.preventDefault()
 
       try {
-        setJwtToken(await signin(username, password))
+        const tokens = await signin(username, password)
+        updateAuth(...tokens)
         router.push("/")
       } catch (e) {
         console.error(e)
@@ -33,7 +35,7 @@ export default function Signin() {
   )
 
   // redirect users to dashboard if they are already signed in
-  if (typeof window !== "undefined" && jwtToken !== null) {
+  if (typeof window !== "undefined" && isSignedIn) {
     router.push("/")
     return null
   }

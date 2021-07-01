@@ -1,96 +1,115 @@
-import { createContext, useContext, useState, useCallback, FC } from "react"
-import { API_URL } from "./api"
+import {
+  createContext,
+  useContext,
+  useState,
+  useCallback,
+  PropsWithChildren,
+} from "react"
+import { appAxios } from "./axios"
+import {
+  NotFoundError,
+  ServerError,
+  UnauthorizedError,
+  UnknownError,
+} from "./errors"
+import { SigninResponse } from "./responses"
 
-export interface AppJwtToken {
-  access: string
-  refresh: string
-}
-export type AppJwtTokenOpt = AppJwtToken | null
+export type AccessToken = string | null
+export type RefreshToken = string | null
+export type AppTokenPair = [AccessToken, RefreshToken]
+export type AppTokenPairUpdater = (
+  accessToken: AccessToken,
+  refreshToken: RefreshToken
+) => void
 
-const JWTGetTokenContext = createContext<AppJwtTokenOpt>(null)
-const JWTUpdateTokenContext = createContext<(token: AppJwtTokenOpt) => void>(
-  () => null
-)
+const JWTGetTokenContext = createContext<AccessToken>(null)
+const JWTUpdateTokenContext = createContext<AppTokenPairUpdater>(() => null)
 
-function readJwtToken(): AppJwtTokenOpt {
-  if (typeof sessionStorage === "undefined") return null
+function readJwtToken(): AppTokenPair {
+  if (typeof sessionStorage === "undefined") return [null, null]
 
   const access = sessionStorage.getItem("access")
   const refresh = sessionStorage.getItem("refresh")
-  if (access === null || refresh === null) {
-    return null
-  }
 
-  return { access, refresh }
+  return [access, refresh]
 }
 
-function storeJwtToken(token: AppJwtTokenOpt) {
+function storeJwtToken(accessToken: AccessToken, refreshToken: RefreshToken) {
   if (typeof sessionStorage === "undefined") return
 
-  if (token === null) {
+  if (accessToken === null) {
     sessionStorage.removeItem("access")
-    sessionStorage.removeItem("refresh")
-    return
+  } else {
+    sessionStorage.setItem("access", accessToken)
   }
 
-  const { access, refresh } = token
-  sessionStorage.setItem("access", access)
-  sessionStorage.setItem("refresh", refresh)
+  if (refreshToken === null) {
+    sessionStorage.removeItem("refresh")
+  } else {
+    sessionStorage.setItem("refresh", refreshToken)
+  }
 }
 
 export async function signin(
   username: string,
   password: string
-): Promise<AppJwtToken> {
-  const url = `${API_URL}/token/`
-  const response = await fetch(url, {
-    method: "post",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, password }),
-  })
+): Promise<AppTokenPair> {
+  try {
+    const reqBody = { username, password }
+    const response = await appAxios.post("/jwt-token/", reqBody)
+    const { access, refresh } = response.data as SigninResponse
 
-  if (!response.ok) {
-    switch (Math.floor(response.status / 100)) {
-      case 4:
-        throw "Invalid Credentials"
-      case 5:
-        throw "Server Error"
-      default:
-        throw "Unknown Error"
+    return [access, refresh]
+  } catch (error) {
+    // HTTP error
+    if (error.response) {
+      switch (error.response.status) {
+        case 401:
+          throw new UnauthorizedError()
+        case 404:
+          throw new NotFoundError()
+        case 500:
+          throw new ServerError()
+        default:
+          throw new UnknownError()
+      }
     }
+
+    // other errors
+    if (error.request) {
+      console.error("no response received")
+      console.log(error.request)
+    } else {
+      console.error(error.message)
+    }
+
+    console.log(error.config)
+    throw new UnknownError()
   }
-
-  return (await response.json()) as AppJwtToken
 }
 
-export function useAuthJwt(): [
-  AppJwtTokenOpt,
-  (token: AppJwtTokenOpt) => void
-] {
-  return [useContext(JWTGetTokenContext), useContext(JWTUpdateTokenContext)]
+export function useUserSignedIn(): boolean {
+  return useContext(JWTGetTokenContext) !== null
 }
 
-export function useUserSignedIn() {
-  const jwtToken = useContext(JWTGetTokenContext)
-  const isSignedIn = jwtToken !== null
-
-  return isSignedIn
+export function useAuthUpdater(): AppTokenPairUpdater {
+  return useContext(JWTUpdateTokenContext)
 }
 
-export const JWTTokenProvider: FC<{}> = (props) => {
-  const [jwtToken, setJwtToken] = useState<AppJwtTokenOpt>(() => readJwtToken())
+export function JWTTokenProvider({ children }: PropsWithChildren<{}>) {
+  const [jwtToken, setJwtToken] = useState<AppTokenPair>(() => readJwtToken())
   const updateJwtToken = useCallback(
-    (token: AppJwtTokenOpt) => {
-      storeJwtToken(token)
-      setJwtToken(token)
+    (accessToken: AccessToken, refreshToken: RefreshToken) => {
+      storeJwtToken(accessToken, refreshToken)
+      setJwtToken([accessToken, refreshToken])
     },
     [setJwtToken]
   )
 
   return (
-    <JWTGetTokenContext.Provider value={jwtToken}>
+    <JWTGetTokenContext.Provider value={jwtToken[0]}>
       <JWTUpdateTokenContext.Provider value={updateJwtToken}>
-        {props.children}
+        {children}
       </JWTUpdateTokenContext.Provider>
     </JWTGetTokenContext.Provider>
   )

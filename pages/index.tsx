@@ -9,7 +9,7 @@ export default function Dashboard() {
   const isSignedIn = useUserSignedIn()
 
   if (typeof window !== "undefined" && !isSignedIn) {
-    router.push("signin")
+    router.push("/signin")
     return null
   }
 

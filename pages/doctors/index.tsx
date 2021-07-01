@@ -1,14 +1,14 @@
 import { useRouter } from "next/router"
 
-import { useUserSignedIn } from "../api/auth"
-import Layout from "../components/layout"
+import { useUserSignedIn } from "../../api/auth"
+import Layout from "../../components/layout"
 
 export default function Patients() {
   const router = useRouter()
   const isSignedIn = useUserSignedIn()
 
   if (typeof window !== "undefined" && !isSignedIn) {
-    router.push("signin")
+    router.push("/signin")
     return null
   }
 
