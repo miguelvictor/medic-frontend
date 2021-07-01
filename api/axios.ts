@@ -1,4 +1,10 @@
-import axios from "axios"
+import axios, { AxiosError } from "axios"
+import {
+  NotFoundError,
+  ServerError,
+  UnauthorizedError,
+  UnknownError,
+} from "./errors"
 import { RefreshTokenResponse } from "./responses"
 
 export const API_URL = "http://localhost:8000/api/v1/"
@@ -65,4 +71,31 @@ async function refreshAccessToken(refreshToken: string): Promise<string> {
   const { access } = response.data as RefreshTokenResponse
 
   return access
+}
+
+export function handleAxiosError(error: AxiosError) {
+  // HTTP error
+  if (error.response) {
+    switch (error.response.status) {
+      case 401:
+        return new UnauthorizedError()
+      case 404:
+        return new NotFoundError()
+      case 500:
+        return new ServerError()
+      default:
+        return new UnknownError()
+    }
+  }
+
+  // other errors
+  if (error.request) {
+    console.error("no response received")
+    console.log(error.request)
+  } else {
+    console.error(error.message)
+  }
+
+  console.log(error.config)
+  return new UnknownError()
 }

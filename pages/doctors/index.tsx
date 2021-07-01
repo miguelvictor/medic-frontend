@@ -1,11 +1,13 @@
 import { useRouter } from "next/router"
 
-import { useUserSignedIn } from "../../api/auth"
+import { useDoctorInfos, useUserSignedIn } from "../../api"
 import Layout from "../../components/layout"
+import DoctorsTable from "../../components/doctors-table"
 
-export default function Patients() {
+export default function DoctorList() {
   const router = useRouter()
   const isSignedIn = useUserSignedIn()
+  const [doctors, isLoading] = useDoctorInfos()
 
   if (typeof window !== "undefined" && !isSignedIn) {
     router.push("/signin")
@@ -21,11 +23,7 @@ export default function Patients() {
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 sm:px-6 lg:px-8">
-          {/* Replace with your content */}
-          <div className="px-4 py-6 sm:px-0">
-            <div className="border-4 border-dashed border-gray-200 rounded-lg h-96" />
-          </div>
-          {/* /End replace */}
+          <DoctorsTable doctors={doctors} />
         </div>
       </main>
     </Layout>

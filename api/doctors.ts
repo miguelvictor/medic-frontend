@@ -2,45 +2,29 @@ import { useState, useEffect } from "react"
 import { useRouter } from "next/router"
 
 import { useAuthUpdater } from "./auth"
-import { appAxios } from "./axios"
-import {
-  NotFoundError,
-  ServerError,
-  UnauthorizedError,
-  UnknownError,
-} from "./errors"
-import { Doctor } from "./models"
+import { appAxios, handleAxiosError } from "./axios"
+import { UnauthorizedError } from "./errors"
+import { Doctor, ListObjectsResponse } from "./responses"
+
+export async function getDoctors(page?: number): Promise<Doctor[]> {
+  try {
+    const params = { page: page ?? 1 }
+    const response = await appAxios.get(`/doctors/`, { params })
+    const data = response.data as ListObjectsResponse<Doctor>
+
+    return data.results
+  } catch (error) {
+    throw handleAxiosError(error)
+  }
+}
 
 export async function getDoctor(id: string): Promise<Doctor> {
   try {
-    const body = await appAxios.get(`/doctors/${id}/`)
+    const response = await appAxios.get(`/doctors/${id}/`)
 
-    return body.data as Doctor
+    return response.data as Doctor
   } catch (error) {
-    // HTTP error
-    if (error.response) {
-      switch (error.response.status) {
-        case 401:
-          throw new UnauthorizedError()
-        case 404:
-          throw new NotFoundError()
-        case 500:
-          throw new ServerError()
-        default:
-          throw new UnknownError()
-      }
-    }
-
-    // other errors
-    if (error.request) {
-      console.error("no response received")
-      console.log(error.request)
-    } else {
-      console.error(error.message)
-    }
-
-    console.log(error.config)
-    throw new UnknownError()
+    throw handleAxiosError(error)
   }
 }
 
@@ -73,4 +57,31 @@ export function useDoctorInfo(
   }, [id, updateAuth, setDoctor])
 
   return [doctor, isLoading]
+}
+
+export function useDoctorInfos(): [Doctor[], boolean] {
+  const router = useRouter()
+  const updateAuth = useAuthUpdater()
+  const [doctors, setDoctors] = useState<Doctor[]>([])
+  const [isLoading, setIsLoading] = useState(true)
+
+  useEffect(() => {
+    setIsLoading(true)
+    ;(async () => {
+      try {
+        setDoctors(await getDoctors())
+      } catch (e) {
+        console.error(e)
+
+        if (e instanceof UnauthorizedError) {
+          updateAuth(null, null)
+          router.push("/signout")
+        }
+      } finally {
+        setIsLoading(false)
+      }
+    })()
+  }, [updateAuth, setDoctors])
+
+  return [doctors, isLoading]
 }
