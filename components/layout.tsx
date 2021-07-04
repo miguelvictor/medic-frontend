@@ -12,7 +12,7 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
   const router = useRouter()
 
   return (
-    <div>
+    <div className="h-full bg-gray-100">
       <Disclosure as="nav" className="bg-gray-800">
         {({ open }) => (
           <>
