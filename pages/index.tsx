@@ -1,6 +1,6 @@
 import { useRouter } from "next/router"
 
-import { useUserSignedIn } from "../api/auth"
+import { useDashboardGraph, useDashboardInfo, useUserSignedIn } from "../api"
 import Layout from "../components/layout"
 import Timestamp from "../components/timestamp"
 import DashboardInfo from "../components/dashboard-info"
@@ -10,6 +10,8 @@ import DashboardTable from "../components/dashboard-table"
 export default function Dashboard() {
   const router = useRouter()
   const isSignedIn = useUserSignedIn()
+  const [info, isInfoLoading] = useDashboardInfo()
+  const [graphData, isGraphLoading] = useDashboardGraph()
 
   if (typeof window !== "undefined" && !isSignedIn) {
     router.push("/signin")
@@ -26,22 +28,14 @@ export default function Dashboard() {
       </header>
       <main>
         <div className="max-w-7xl mx-auto py-6 px-6 lg:py-8 lg:px-8">
-          <DashboardInfo
-            patients={3999}
-            warnings={143}
-            discharged={582}
-            doctors={13}
-            trendPatients={5}
-            trendWarnings={10}
-            trendDischarged={-84}
-            trendDoctors={2}
-          />
+          <DashboardInfo info={info} isLoading={isInfoLoading} />
           <div className="mt-4 flex flex-col md:flex-row space-x-4">
             <div className="bg-white flex-1 h-96 rounded-lg shadow no-scrollbar overflow-y-scroll">
               <DashboardTable />
             </div>
-            <div className="bg-white flex-1 h-96 rounded-lg shadow p-6 flex items-center">
-              <DashboardGraph />
+            <div className="bg-white flex-1 h-96 rounded-lg shadow p-6 flex flex-col">
+              <h1 className="font-bold text-xl mb-2">人数统计图</h1>
+              <DashboardGraph data={graphData} isLoading={isGraphLoading} />
             </div>
           </div>
         </div>

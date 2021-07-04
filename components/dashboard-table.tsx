@@ -10,9 +10,15 @@ export default function DashboardTable() {
           患者 #{i}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-            Active
-          </span>
+          {i % 2 == 0 ? (
+            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+              是
+            </span>
+          ) : (
+            <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-red-100 text-red-800">
+              否
+            </span>
+          )}
         </td>
         <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
           <Link href="/patients/">
@@ -30,13 +36,13 @@ export default function DashboardTable() {
             scope="col"
             className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            姓名
+            患者
           </th>
           <th
             scope="col"
             className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"
           >
-            身份证号
+            病案号
           </th>
           <th
             scope="col"

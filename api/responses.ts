@@ -40,3 +40,20 @@ export interface Patient {
   dod: string | null
   age: number
 }
+
+export interface DashboardInfoResponse {
+  patients: number
+  icuPatients: number
+  warnings: number
+  doctors: number
+  trendPatients: number
+  trendIcuPatients: number
+  trendWarnings: number
+  trendDoctors: number
+}
+
+export interface DashboardGraphResponse {
+  patients: number
+  icuPatients: number
+  dischargedPatients: number
+}

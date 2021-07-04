@@ -17,9 +17,10 @@ export enum DashboardInfoCardIcon {
 export interface DashboardInfoCardProps {
   icon: DashboardInfoCardIcon
   label: string
-  value: number
+  value?: number
   unit: string
-  trend: number
+  trend?: number
+  isLoading: boolean
 }
 
 export default function DashboardInfoCard({
@@ -28,18 +29,22 @@ export default function DashboardInfoCard({
   value,
   unit,
   trend,
+  isLoading,
 }: DashboardInfoCardProps) {
   const iconElement = getIconElement(icon)
-  const trendElement = getTrendElement(trend)
+  const trendElement = isLoading ? null : getTrendElement(trend)
+  const valueElement = isLoading ? (
+    <div className="animate-pulse h-5 w-16 bg-gray-400 rounded mt-1"></div>
+  ) : (
+    `${value ?? "～"} ${unit}`
+  )
 
   return (
     <div className="p-6 bg-white shadow rounded-lg flex-1 flex items-center">
       {iconElement}
       <div className="ml-4">
         <div className="text-sm text-gray-500">{label}</div>
-        <div className="text-xl font-bold">
-          {value} {unit}
-        </div>
+        <div className="text-xl font-bold">{valueElement}</div>
       </div>
       {trendElement}
     </div>
@@ -76,7 +81,7 @@ function getIconElement(
 }
 
 function getTrendElement(
-  trend: number,
+  trend: number | undefined,
   containerClasses = "ml-4 text-sm mt-7 flex items-center"
 ) {
   if (!trend) return null
