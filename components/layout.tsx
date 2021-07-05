@@ -22,7 +22,7 @@ export default function Layout({
 
   return (
     <div>
-      <Disclosure as="nav" className="bg-gray-800">
+      <Disclosure as="nav" className="sticky top-0 z-50 bg-gray-800">
         {({ open }) => (
           <>
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -266,9 +266,11 @@ export default function Layout({
         )}
       </Disclosure>
 
-      <header className="bg-white shadow-md">
+      <header className="md:sticky md:top-16 bg-white shadow-md">
         <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-900">
+            {title}
+          </h1>
           <Timestamp />
         </div>
       </header>

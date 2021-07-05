@@ -29,14 +29,14 @@ export default function DashboardTable({
   const rows = patients ? (
     patients.map((patient) => (
       <tr key={patient.subjectId}>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">{patient.name}</td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <td className="px-6 py-3 whitespace-nowrap text-sm">{patient.name}</td>
+        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
           #{patient.wardId}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
           {patient.duration}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
           {patient.isHighRisk ? (
             <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
               有
@@ -47,7 +47,7 @@ export default function DashboardTable({
             </span>
           )}
         </td>
-        <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+        <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
           <Link href={`/patients/${patient.subjectId}`}>
             <a className="text-indigo-600 hover:text-indigo-900">View</a>
           </Link>

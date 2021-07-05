@@ -11,6 +11,9 @@ export default function Signout() {
     updateAuth(null, null)
   }
 
-  router.push("/signin")
+  if (typeof window !== "undefined") {
+    router.push("/signin")
+  }
+
   return null
 }
