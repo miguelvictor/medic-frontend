@@ -4,7 +4,11 @@ import { useRouter } from "next/router"
 import { useAuthUpdater } from "./auth"
 import { appAxios, handleAxiosError } from "./axios"
 import { UnauthorizedError } from "./errors"
-import { DashboardGraphResponse, DashboardInfoResponse } from "./responses"
+import {
+  DashboardInfoResponse,
+  DashboardGraphResponse,
+  DashboardPatientsResponse,
+} from "./responses"
 
 async function getPredictorResponse<T>(url: string): Promise<T> {
   try {
@@ -53,5 +57,11 @@ export function useDashboardInfo() {
 export function useDashboardGraph() {
   return usePredictors(() =>
     getPredictorResponse<DashboardGraphResponse>("/dashboard-graph/")
+  )
+}
+
+export function useDashboardPatients() {
+  return usePredictors(() =>
+    getPredictorResponse<DashboardPatientsResponse>("/dashboard-patients/")
   )
 }

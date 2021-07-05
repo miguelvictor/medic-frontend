@@ -54,7 +54,7 @@ export function usePatientInfo(
         setIsLoading(false)
       }
     })()
-  }, [id, updateAuth, setPatient])
+  }, [id, setIsLoading, setPatient, updateAuth, router])
 
   return [patient, isLoading]
 }
@@ -81,7 +81,7 @@ export function usePatientInfos(): [Patient[], boolean] {
         setIsLoading(false)
       }
     })()
-  }, [updateAuth, setPatients])
+  }, [setIsLoading, setPatients, updateAuth, router])
 
   return [patients, isLoading]
 }

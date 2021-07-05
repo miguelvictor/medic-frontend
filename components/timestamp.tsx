@@ -8,11 +8,11 @@ export default function Timestamp() {
     return () => clearInterval(timerID)
   })
 
-  const datePart = `${date.getFullYear()}年 ${
+  const datePart = `${date.getFullYear()}年${
     date.getMonth() + 1
-  }月 ${date.getDate()}日`
+  }月${date.getDate()}日`
   const timePart = date.toLocaleTimeString()
   const dateTime = `${datePart} ${timePart}`
 
-  return <div>{dateTime}</div>
+  return <div className="hidden sm:block">{dateTime}</div>
 }

@@ -4,15 +4,24 @@ import { useRouter } from "next/router"
 import { Disclosure, Menu, Transition } from "@headlessui/react"
 import { BellIcon, MenuIcon, XIcon } from "@heroicons/react/outline"
 
+import Timestamp from "./timestamp"
+
 function classNames(...classes: string[]) {
   return classes.filter(Boolean).join(" ")
 }
 
-export default function Layout({ children }: PropsWithChildren<{}>) {
+export interface LayoutProps {
+  title: string
+}
+
+export default function Layout({
+  title,
+  children,
+}: PropsWithChildren<LayoutProps>) {
   const router = useRouter()
 
   return (
-    <div className="h-full bg-gray-100">
+    <div>
       <Disclosure as="nav" className="bg-gray-800">
         {({ open }) => (
           <>
@@ -257,7 +266,15 @@ export default function Layout({ children }: PropsWithChildren<{}>) {
         )}
       </Disclosure>
 
-      {children}
+      <header className="bg-white shadow-md">
+        <div className="max-w-7xl mx-auto py-4 px-4 sm:px-6 lg:px-8 flex items-center justify-between">
+          <h1 className="text-3xl font-bold text-gray-900">{title}</h1>
+          <Timestamp />
+        </div>
+      </header>
+      <main className="max-w-7xl mx-auto py-4 px-4 lg:py-8 lg:px-8">
+        {children}
+      </main>
     </div>
   )
 }

@@ -57,3 +57,12 @@ export interface DashboardGraphResponse {
   icuPatients: number
   dischargedPatients: number
 }
+
+export interface DashboardPatientResponse {
+  subjectId: number
+  name: string
+  wardId: number
+  duration: number
+  isHighRisk: boolean
+}
+export type DashboardPatientsResponse = DashboardPatientResponse[]

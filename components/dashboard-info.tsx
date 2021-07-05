@@ -8,7 +8,7 @@ export interface DashboardInfoProps {
 
 export default function DashboardInfo({ isLoading, info }: DashboardInfoProps) {
   return (
-    <div className="flex flex-col md:flex-row space-x-4">
+    <div className="flex flex-col space-y-4 md:flex-row md:space-x-4 md:space-y-0">
       <DashboardInfoCard
         icon={DashboardInfoCardIcon.Scale}
         label="住院人数"

@@ -56,12 +56,12 @@ export default function DashboardGraph({
 }: DashboardGraphProps) {
   if (isLoading) {
     return (
-      <div className="flex flex-col justify-center items-center h-full w-full space-y-4">
-        <div className="animate-pulse h-5 w-32 bg-gray-400 rounded"></div>
+      <div className="flex flex-col justify-center h-full mx-auto my-8 space-y-4">
+        <div className="animate-pulse h-4 w-32 bg-gray-400 rounded"></div>
         <div className="h-1"></div>
-        <div className="animate-pulse h-5 w-52 bg-gray-400 rounded"></div>
-        <div className="animate-pulse h-5 w-48 bg-gray-400 rounded"></div>
-        <div className="animate-pulse h-5 w-56 bg-gray-400 rounded"></div>
+        <div className="animate-pulse h-4 w-64 bg-gray-400 rounded"></div>
+        <div className="animate-pulse h-4 w-52 bg-gray-400 rounded"></div>
+        <div className="animate-pulse h-4 w-52 bg-gray-400 rounded"></div>
       </div>
     )
   }
@@ -84,5 +84,5 @@ export default function DashboardGraph({
     ],
   }
 
-  return <Line data={data} options={options} />
+  return <Line type="line" data={data} options={options} />
 }

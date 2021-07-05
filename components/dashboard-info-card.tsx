@@ -34,7 +34,7 @@ export default function DashboardInfoCard({
   const iconElement = getIconElement(icon)
   const trendElement = isLoading ? null : getTrendElement(trend)
   const valueElement = isLoading ? (
-    <div className="animate-pulse h-5 w-16 bg-gray-400 rounded mt-1"></div>
+    <div className="animate-pulse h-4 w-16 bg-gray-400 rounded mt-1"></div>
   ) : (
     `${value ?? "～"} ${unit}`
   )

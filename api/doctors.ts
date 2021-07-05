@@ -54,7 +54,7 @@ export function useDoctorInfo(
         setIsLoading(false)
       }
     })()
-  }, [id, updateAuth, setDoctor])
+  }, [id, setIsLoading, setDoctor, updateAuth, router])
 
   return [doctor, isLoading]
 }
@@ -81,7 +81,7 @@ export function useDoctorInfos(): [Doctor[], boolean] {
         setIsLoading(false)
       }
     })()
-  }, [updateAuth, setDoctors])
+  }, [setIsLoading, setDoctors, updateAuth, router])
 
   return [doctors, isLoading]
 }
