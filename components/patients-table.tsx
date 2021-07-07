@@ -6,29 +6,33 @@ export interface PatientsTableProps {
 }
 
 export default function PatientsTable({ patients }: PatientsTableProps) {
-  const rows = patients.map((patient) => (
-    <tr key={patient.subjectId}>
-      <td className="px-6 py-3 whitespace-nowrap text-sm">{patient.name}</td>
-      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
-        {patient.nationalId}
-      </td>
-      <td className="px-6 py-3 whitespace-nowrap text-sm">
-        <div className="text-sm text-gray-900">
-          {patient.age}岁 · {patient.ethnicity} · {patient.gender}
-        </div>
-      </td>
-      <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
-        <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
-          有
-        </span>
-      </td>
-      <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
-        <Link href={`/patients/${patient.subjectId}`}>
-          <a className="text-indigo-600 hover:text-indigo-900">View</a>
-        </Link>
-      </td>
-    </tr>
-  ))
+  const rows = patients.map((patient, index) => {
+    const rowClasses = index % 2 == 0 ? "" : "bg-gray-50"
+
+    return (
+      <tr key={patient.subjectId} className={rowClasses}>
+        <td className="px-6 py-3 whitespace-nowrap text-sm">{patient.name}</td>
+        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500">
+          {patient.nationalId}
+        </td>
+        <td className="px-6 py-3 whitespace-nowrap text-sm">
+          <div className="text-sm text-gray-900">
+            {patient.age}岁 · {patient.ethnicity} · {patient.gender}
+          </div>
+        </td>
+        <td className="px-6 py-3 whitespace-nowrap text-sm text-gray-500 text-center">
+          <span className="px-2 inline-flex text-xs leading-5 font-semibold rounded-full bg-green-100 text-green-800">
+            有
+          </span>
+        </td>
+        <td className="px-6 py-3 whitespace-nowrap text-right text-sm font-medium">
+          <Link href={`/patients/${patient.subjectId}`}>
+            <a className="text-indigo-600 hover:text-indigo-900">View</a>
+          </Link>
+        </td>
+      </tr>
+    )
+  })
 
   return (
     <div className="shadow overflow-hidden border-b border-gray-200 sm:rounded-lg">

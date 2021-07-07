@@ -1,8 +1,10 @@
 import { useRouter } from "next/router"
-import { usePatientInfo } from "../../api"
 
-import { useUserSignedIn } from "../../api/auth"
+import { usePatientInfo, useUserSignedIn } from "../../api"
 import Layout from "../../components/layout"
+import PatientInfoCard from "../../components/patient-info-card"
+import PatientMortalityCard from "../../components/patient-mortality-card"
+import PatientPredictorsTabs from "../../components/patient-predictors-tabs"
 
 export default function PatientDetails() {
   const router = useRouter()
@@ -15,97 +17,18 @@ export default function PatientDetails() {
     return null
   }
 
-  const doctorName = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
-  ) : (
-    <h2 className="text-lg leading-6 font-medium text-gray-900">
-      {patient!.name}
-    </h2>
-  )
-  const workerID = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-2/6"></div>
-  ) : (
-    patient!.nationalId
-  )
-  const nationalID = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
-  ) : (
-    patient!.nationalId
-  )
-  const contactNo = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
-  ) : (
-    patient!.contactNo ?? "-"
-  )
-  const email = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
-  ) : (
-    patient!.email ?? "-"
-  )
-  const gender = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-1/6"></div>
-  ) : (
-    patient!.gender
-  )
-  const dateOfBirth = isLoading ? (
-    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
-  ) : (
-    patient?.dateOfBirth
-  )
-
   return (
     <Layout title={`患者 #${id} 信息`}>
-      <div className="bg-white shadow overflow-hidden rounded-lg">
-        <div className="px-4 py-5 sm:px-6">
-          <div className="mt-1 max-w-2xl text-sm text-gray-500 space-y-2">
-            {doctorName}
-            {workerID}
-          </div>
+      <div className="flex flex-col justify-stretch md:flex-row space-y-4 md:space-x-4 md:space-y-0">
+        <div className="flex-grow">
+          <PatientInfoCard patient={patient} isLoading={isLoading} />
         </div>
-        <div className="border-t border-gray-200">
-          <dl>
-            <div className="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                身份证号（National ID）
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {nationalID}
-              </dd>
-            </div>
-            <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                邮箱（Email）
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {email}
-              </dd>
-            </div>
-            <div className="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                联系方式（Contact No.）
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {contactNo}
-              </dd>
-            </div>
-            <div className="bg-white px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                性别（Gender）
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {gender}
-              </dd>
-            </div>
-            <div className="bg-gray-50 px-4 py-3 sm:grid sm:grid-cols-3 sm:gap-4 sm:px-6">
-              <dt className="text-sm font-medium text-gray-500">
-                生日日期（Date of Birth）
-              </dt>
-              <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
-                {dateOfBirth}
-              </dd>
-            </div>
-          </dl>
+        <div className="flex-grow-0">
+          <PatientMortalityCard />
         </div>
+      </div>
+      <div className="bg-white mt-4 shadow rounded-lg p-6">
+        <PatientPredictorsTabs />
       </div>
     </Layout>
   )

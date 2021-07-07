@@ -1,0 +1,100 @@
+import { Patient } from "../api"
+
+export interface PatientInfoCardProps {
+  isLoading: boolean
+  patient: Patient | null
+}
+
+export default function PatientInfoCard({
+  isLoading,
+  patient,
+}: PatientInfoCardProps) {
+  const doctorName = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
+  ) : (
+    <h2 className="text-lg leading-6 font-medium text-gray-900">
+      {patient?.name ?? "～"}
+    </h2>
+  )
+  const workerID = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-2/6"></div>
+  ) : (
+    patient?.nationalId ?? "～"
+  )
+  const nationalID = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-4/6"></div>
+  ) : (
+    patient?.nationalId ?? "～"
+  )
+  const contactNo = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
+  ) : (
+    patient?.contactNo ?? "～"
+  )
+  const email = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
+  ) : (
+    patient?.email ?? "～"
+  )
+  const gender = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-1/6"></div>
+  ) : (
+    patient?.gender ?? "～"
+  )
+  const dateOfBirth = isLoading ? (
+    <div className="animate-pulse h-4 bg-gray-600 rounded w-3/6"></div>
+  ) : (
+    patient?.dateOfBirth ?? "～"
+  )
+
+  return (
+    <div className="bg-white shadow overflow-hidden rounded-lg">
+      <div className="px-6 py-3 mt-1 max-w-2xl text-sm text-gray-500 space-y-2">
+        {doctorName}
+        {workerID}
+      </div>
+      <div className="border-t border-gray-200">
+        <dl>
+          <div className="bg-gray-50 px-6 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-500">
+              身份证号（National ID）
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {nationalID}
+            </dd>
+          </div>
+          <div className="bg-white px-6 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-500">邮箱（Email）</dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {email}
+            </dd>
+          </div>
+          <div className="bg-gray-50 px-6 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-500">
+              联系方式（Contact No.）
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {contactNo}
+            </dd>
+          </div>
+          <div className="bg-white px-6 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-500">
+              性别（Gender）
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {gender}
+            </dd>
+          </div>
+          <div className="bg-gray-50 px-6 py-3 sm:grid sm:grid-cols-3 sm:gap-4">
+            <dt className="text-sm font-medium text-gray-500">
+              生日日期（Date of Birth）
+            </dt>
+            <dd className="mt-1 text-sm text-gray-900 sm:mt-0 sm:col-span-2">
+              {dateOfBirth}
+            </dd>
+          </div>
+        </dl>
+      </div>
+    </div>
+  )
+}
